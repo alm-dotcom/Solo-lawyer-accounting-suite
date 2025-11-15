@@ -1,0 +1,2801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Lawyer Accounting Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --navy-dark: #2C3E50;
+            --navy-medium: #34495E;
+            --gold: #B8860B;
+            --gold-light: #D4AF37;
+            --gold-dark: #9A7209;
+            --white: #FFFFFF;
+            --gray-light: #F5F7FA;
+            --gray-medium: #A0AEC0;
+            --teal: #16A085;
+            --red: #E74C3C;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #E8EEF2 0%, #F5F7FA 100%);
+        }
+
+        /* Header Styling */
+        .app-header {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(44, 62, 80, 0.2);
+        }
+
+        .app-title {
+            color: var(--gold);
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-subtitle {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 0.5rem;
+        }
+
+        .app-tagline {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        /* Card Styling */
+        .dashboard-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .card-value.amount {
+            color: var(--teal);
+        }
+
+        .card-value.count {
+            color: var(--red);
+        }
+
+        /* Button Styling */
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(184, 134, 11, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(184, 134, 11, 0.4);
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+        }
+
+        .btn-gold:active {
+            transform: translateY(0);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-medium) 100%);
+            color: white;
+        }
+
+        .sidebar-header {
+            border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        .sidebar-link {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .sidebar-link:hover {
+            background: rgba(184, 134, 11, 0.15);
+            border-left-color: var(--gold);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .sidebar-link.active {
+            background: rgba(184, 134, 11, 0.25);
+            border-left-color: var(--gold);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Form Styling */
+        input, select, textarea {
+            border: 2px solid #E2E8F0;
+            border-radius: 6px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+        }
+
+        /* Table Styling */
+        table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        table thead {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-medium) 100%);
+            color: white;
+        }
+
+        table th {
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 1rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        table tbody tr:hover {
+            background: #F7FAFC;
+        }
+
+        /* Page Headings */
+        .page-heading {
+            color: var(--navy-dark);
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-heading {
+            color: var(--navy-dark);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            display: none;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .timer-running {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .7;
+            }
+        }
+        /* Spinner for loading states */
+        .spinner {
+            animation: spin 1s linear infinite;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Print-specific styles for invoices */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #view-invoice-modal, #invoice-content, #invoice-content * {
+                visibility: visible;
+            }
+            #view-invoice-modal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: visible;
+                background: white;
+            }
+            #view-invoice-modal > div {
+                 box-shadow: none;
+                 border: none;
+            }
+            .modal-buttons { /* A class for the button container */
+                display: none;
+            }
+        }
+        .calendar-event {
+            font-size: 0.75rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .task-filter-btn.active {
+            background-color: #3B82F6;
+            color: white;
+        }
+         /* Budget Bar */
+        .progress-bar {
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            transition: width 0.3s ease-in-out;
+        }
+        #logo-drop-zone.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed top-5 right-5 p-4 rounded-lg shadow-lg text-white z-50 hidden transition-transform transform translate-x-full">
+        <p id="toast-message"></p>
+    </div>
+
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 sidebar text-white flex-col hidden sm:flex">
+            <div class="p-4 border-b border-gray-700 flex items-center sidebar-header">
+                <div class="logo-container w-full flex justify-center">
+                    <img src="lamar-allen-law-firm-logo.png" 
+                         alt="Lamar Allen Law Firm" 
+                         class="sidebar-logo h-20 w-auto object-contain"/>
+                </div>
+            </div>
+            <nav class="flex-1 p-2">
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="dashboard">Dashboard</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="clients">Clients & Matters</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="tasks">Tasks</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="budget">Budget</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="trust">Trust Account</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="operating">Operating Account</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="invoices">Invoices</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="calendar">Calendar</a>
+                <a href="#" class="sidebar-link block py-2.5 px-4 rounded" data-tab="settings">Settings</a>
+            </nav>
+            <div class="p-2 border-t border-gray-700">
+                <a href="#" id="export-data-btn" class="block text-center py-2.5 px-4 rounded btn-gold text-sm">Export All Data</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 overflow-y-auto">
+            <!-- Dashboard -->
+            <div id="dashboard" class="tab-content active">
+                <!-- Header -->
+                <div class="app-header">
+                    <h1 class="app-title">Lamar Allen Law Firm</h1>
+                    <p class="app-subtitle">Practice Management Suite</p>
+                    <p class="app-tagline">Professional • Elegant • Powerful</p>
+                </div>
+
+                <h2 class="section-heading">Your Law Firm's New Look</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Trust Account Balance</h3>
+                        <p id="dashboard-trust-balance" class="card-value amount">$0.00</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Operating Balance</h3>
+                        <p id="dashboard-operating-balance" class="card-value amount">$0.00</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Unpaid Invoices</h3>
+                        <p id="dashboard-unpaid-invoices" class="card-value count">0</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-4 justify-center mb-8">
+                    <button class="btn-gold" onclick="document.querySelector('[data-tab=clients]').click()">Add New Client</button>
+                    <button class="btn-gold" onclick="document.querySelector('[data-tab=invoices]').click()">Create Invoice</button>
+                    <button class="btn-gold" onclick="document.querySelector('[data-tab=tasks]').click()">Time Entry</button>
+                </div>
+            </div>
+
+            <!-- Clients & Matters -->
+            <div id="clients" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="page-heading">Clients & Matters</h2>
+                    <button id="add-client-btn" class="btn-gold">Add New Client</button>
+                </div>
+                <div id="client-list" class="bg-white p-6 rounded-lg shadow">
+                    <!-- Client list will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div id="tasks" class="tab-content">
+                 <div class="flex justify-between items-center mb-6">
+                    <h2 class="page-heading">Task Manager</h2>
+                    <button id="add-task-btn" class="btn-gold">New Task</button>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <!-- Filters -->
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-4">
+                            <div class="flex rounded-md shadow-sm">
+                                <button data-status="outstanding" class="task-filter-btn px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 active">Outstanding</button>
+                                <button data-status="completed" class="task-filter-btn px-4 py-2 border-t border-b border-r border-gray-300 text-sm font-medium rounded-r-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">Completed</button>
+                            </div>
+                            <div>
+                                <label for="task-matter-filter" class="sr-only">Filter by Matter</label>
+                                <select id="task-matter-filter" class="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                    <option value="all">All Matters</option>
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="p-2 w-28">Due Date</th>
+                                    <th class="p-2">Task</th>
+                                    <th class="p-2">Matter</th>
+                                    <th class="p-2">Assigned By</th>
+                                    <th class="p-2 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="task-list-body">
+                                <!-- Tasks will be rendered here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Budget Tab -->
+            <div id="budget" class="tab-content">
+                <h2 class="page-heading">Client Budgets</h2>
+                <div id="budget-list" class="space-y-6">
+                    <!-- Budget tracking for each client will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Trust Account -->
+            <div id="trust" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="page-heading">Trust Account</h2>
+                    <button id="add-trust-transaction-btn" class="btn-gold">Add Transaction</button>
+                </div>
+                 <div class="bg-white p-4 rounded-lg shadow mb-4">
+                    <h3 class="text-lg font-medium text-gray-700">Total Trust Balance: <span id="total-trust-balance" class="font-bold text-xl">$0.00</span></h3>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Client/Matter</th>
+                                <th class="p-2">Description</th>
+                                <th class="p-2">Type</th>
+                                <th class="p-2 text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trust-transactions-body">
+                            <!-- Trust transactions will be rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Operating Account -->
+            <div id="operating" class="tab-content">
+                 <div class="flex justify-between items-center mb-6">
+                    <h2 class="page-heading">Operating Account</h2>
+                    <button id="add-operating-transaction-btn" class="btn-gold">Add Transaction</button>
+                </div>
+                 <div class="bg-white p-4 rounded-lg shadow mb-4">
+                    <h3 class="text-lg font-medium text-gray-700">Total Operating Balance: <span id="total-operating-balance" class="font-bold text-xl">$0.00</span></h3>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
+                     <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Category</th>
+                                <th class="p-2">Description</th>
+                                <th class="p-2">Type</th>
+                                <th class="p-2 text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="operating-transactions-body">
+                            <!-- Operating transactions will be rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Invoices -->
+            <div id="invoices" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="page-heading">Invoices</h2>
+                    <button id="create-invoice-btn" class="btn-gold">Create New Invoice</button>
+                </div>
+                <div id="invoice-list" class="bg-white p-6 rounded-lg shadow overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="p-2">Invoice #</th>
+                                <th class="p-2">Client/Matter</th>
+                                <th class="p-2">Date</th>
+                                <th class="p-2">Status</th>
+                                <th class="p-2 text-right">Amount</th>
+                                <th class="p-2 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoices-body">
+                            <!-- Invoices will be rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Calendar -->
+            <div id="calendar" class="tab-content">
+                <h2 class="text-3xl font-semibold mb-6">Calendar</h2>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="prev-month-btn" class="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300">&lt;</button>
+                        <h3 id="calendar-month-year" class="text-xl font-semibold"></h3>
+                        <button id="next-month-btn" class="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300">&gt;</button>
+                    </div>
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="p-2 text-center text-sm text-gray-500">Sun</th>
+                                <th class="p-2 text-center text-sm text-gray-500">Mon</th>
+                                <th class="p-2 text-center text-sm text-gray-500">Tue</th>
+                                <th class="p-2 text-center text-sm text-gray-500">Wed</th>
+                                <th class="p-2 text-center text-sm text-gray-500">Thu</th>
+                                <th class="p-2 text-center text-sm text-gray-500">Fri</th>
+                                <th class="p-2 text-center text-sm text-gray-500">Sat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendar-body">
+                            <!-- Calendar days will be rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div id="settings" class="tab-content">
+                <h2 class="text-3xl font-semibold mb-6">Settings</h2>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-start gap-4">
+                            <img id="firm-logo-display" src="https://placehold.co/100x100/e2e8f0/4a5568?text=Logo" alt="Firm Logo" class="w-24 h-24 object-contain rounded-md border bg-gray-100">
+                            <div class="text-gray-700">
+                                <h3 class="text-xl font-semibold text-gray-800">Firm Information</h3>
+                                <p class="font-bold mt-2" id="firm-name-display">Your Law Firm</p>
+                                <p class="whitespace-pre-line" id="firm-address-display">123 Law St.<br>Anytown, USA 12345</p>
+                            </div>
+                        </div>
+                        <button id="edit-firm-info-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm flex-shrink-0">Edit Firm Info</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="client-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 id="client-modal-title" class="text-2xl font-bold mb-4">Add New Client</h3>
+            <form id="client-form">
+                <input type="hidden" id="client-id">
+                <div class="mb-4">
+                    <label for="client-name" class="block text-gray-700 text-sm font-bold mb-2">Client Name</label>
+                    <input type="text" id="client-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="client-email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="client-email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label for="client-phone" class="block text-gray-700 text-sm font-bold mb-2">Phone</label>
+                    <input type="tel" id="client-phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                 <div class="mb-4">
+                    <label for="client-address" class="block text-gray-700 text-sm font-bold mb-2">Address</label>
+                    <textarea id="client-address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3"></textarea>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-client-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="matter-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 id="matter-modal-title" class="text-2xl font-bold mb-4">Add New Matter</h3>
+            <form id="matter-form">
+                 <input type="hidden" id="matter-client-id">
+                 <input type="hidden" id="matter-id">
+                <div class="mb-4">
+                    <label for="matter-name" class="block text-gray-700 text-sm font-bold mb-2">Matter Name</label>
+                    <input type="text" id="matter-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="matter-description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <textarea id="matter-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-matter-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Matter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="time-entry-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 id="time-entry-modal-title" class="text-2xl font-bold mb-4">Save Time Entry</h3>
+            <form id="time-entry-form">
+                 <input type="hidden" id="time-entry-id">
+                 <input type="hidden" id="time-entry-matter-id">
+                <div class="mb-4">
+                     <label for="time-entry-date" class="block text-gray-700 text-sm font-bold mb-2">Date</label>
+                     <input type="date" id="time-entry-date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Duration</label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="time-entry-hours" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" placeholder="HH" min="0">
+                        <span class="text-gray-500 font-bold">:</span>
+                        <input type="number" id="time-entry-minutes" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" placeholder="MM" min="0" max="59">
+                        <span class="text-gray-500 font-bold">:</span>
+                        <input type="number" id="time-entry-seconds" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" placeholder="SS" min="0" max="59">
+                    </div>
+                </div>
+                 <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="time-entry-rate" class="block text-gray-700 text-sm font-bold mb-2">Hourly Rate ($)</label>
+                        <input type="number" id="time-entry-rate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" value="250" step="0.01">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Calculated Amount</label>
+                        <p id="time-entry-calculated-amount" class="text-lg font-bold text-gray-900 py-2">$0.00</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="time-entry-description" class="block text-gray-700 text-sm font-bold">Description of work performed</label>
+                        <button type="button" id="generate-time-description-btn" class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-md hover:bg-purple-200 flex items-center gap-2">
+                            <span class="btn-text">✨ Generate with AI</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                    </div>
+                    <textarea id="time-entry-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required placeholder="Enter keywords and click generate, or write your own description."></textarea>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-time-entry-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="trust-transaction-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+       <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-4">Add Trust Transaction</h3>
+            <form id="trust-transaction-form">
+                <div class="mb-4">
+                    <label for="trust-transaction-client" class="block text-gray-700 text-sm font-bold mb-2">Client/Matter</label>
+                    <select id="trust-transaction-client" class="shadow border rounded w-full py-2 px-3 text-gray-700" required></select>
+                </div>
+                <div class="mb-4">
+                    <label for="trust-transaction-date" class="block text-gray-700 text-sm font-bold mb-2">Date</label>
+                    <input type="date" id="trust-transaction-date" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                 <div class="mb-4">
+                    <label for="trust-transaction-type" class="block text-gray-700 text-sm font-bold mb-2">Type</label>
+                    <select id="trust-transaction-type" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdrawal</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="trust-transaction-description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <input type="text" id="trust-transaction-description" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                <div class="mb-4">
+                    <label for="trust-transaction-amount" class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
+                    <input type="number" id="trust-transaction-amount" class="shadow border rounded w-full py-2 px-3 text-gray-700" step="0.01" min="0" required>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-trust-transaction-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Add Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="operating-transaction-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-4">Add Operating Transaction</h3>
+            <form id="operating-transaction-form">
+                <div class="mb-4">
+                    <label for="operating-transaction-date" class="block text-gray-700 text-sm font-bold mb-2">Date</label>
+                    <input type="date" id="operating-transaction-date" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                 <div class="mb-4">
+                    <label for="operating-transaction-type" class="block text-gray-700 text-sm font-bold mb-2">Type</label>
+                    <select id="operating-transaction-type" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="operating-transaction-category" class="block text-gray-700 text-sm font-bold">Category</label>
+                        <button type="button" id="suggest-category-btn" class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-md hover:bg-purple-200 flex items-center gap-2">
+                             <span class="btn-text">✨ Suggest Category</span>
+                             <span class="spinner hidden"></span>
+                        </button>
+                    </div>
+                     <input type="text" id="operating-transaction-category" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                <div class="mb-4">
+                    <label for="operating-transaction-description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <input type="text" id="operating-transaction-description" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                <div class="mb-4">
+                    <label for="operating-transaction-amount" class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
+                    <input type="number" id="operating-transaction-amount" class="shadow border rounded w-full py-2 px-3 text-gray-700" step="0.01" min="0" required>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-operating-transaction-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Add Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="invoice-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
+            <h3 id="invoice-modal-title" class="text-2xl font-bold mb-4">Create Invoice</h3>
+            <form id="invoice-form">
+                <input type="hidden" id="invoice-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="invoice-client" class="block text-gray-700 text-sm font-bold mb-2">Client/Matter</label>
+                        <select id="invoice-client" class="shadow border rounded w-full py-2 px-3 text-gray-700" required></select>
+                    </div>
+                    <div>
+                        <label for="invoice-date" class="block text-gray-700 text-sm font-bold mb-2">Invoice Date</label>
+                        <input type="date" id="invoice-date" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                    </div>
+                </div>
+                 <button type="button" id="populate-invoice-btn" class="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 mb-4 flex items-center justify-center gap-2">
+                    <span class="btn-text">✨ Populate from Unbilled Items & Summarize</span>
+                    <span class="spinner hidden"></span>
+                 </button>
+                <hr class="my-4">
+                <h4 class="text-lg font-semibold mb-2">Line Items</h4>
+                <div id="invoice-line-items" class="space-y-2 max-h-40 overflow-y-auto">
+                    <!-- line items will be added here -->
+                </div>
+                 <button type="button" id="add-line-item" class="mt-2 text-sm text-blue-600 hover:text-blue-800">+ Add Manual Line Item</button>
+
+                <hr class="my-4">
+                 <div class="mb-4">
+                    <label for="invoice-notes" class="block text-gray-700 text-sm font-bold mb-2">Invoice Summary / Notes</label>
+                    <textarea id="invoice-notes" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" placeholder="An AI-generated summary of work will appear here..."></textarea>
+                 </div>
+                 <div class="text-right">
+                    <strong class="text-lg">Total: <span id="invoice-total">$0.00</span></strong>
+                </div>
+
+                <div class="flex items-center justify-end mt-6">
+                    <button type="button" id="cancel-invoice-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="view-invoice-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
+            <div id="invoice-content">
+                <!-- Invoice content will be rendered here for printing -->
+            </div>
+             <div class="flex items-center justify-end mt-6 modal-buttons">
+                <button type="button" id="cancel-view-invoice-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Close</button>
+                <button type="button" id="print-invoice-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md">Print Invoice</button>
+            </div>
+        </div>
+    </div>
+    <div id="confirmation-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 id="confirmation-title" class="text-2xl font-bold mb-4 text-gray-800">Confirm Deletion</h3>
+            <p id="confirmation-message" class="text-gray-600 mb-6">Are you sure you want to proceed? This action cannot be undone.</p>
+            <div class="flex items-center justify-end">
+                <button type="button" id="cancel-confirmation-btn" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                <button type="button" id="confirm-delete-btn" class="bg-red-600 text-white px-4 py-2 rounded-md">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div id="draft-reminder-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
+            <h3 class="text-2xl font-bold mb-4 text-gray-800">Draft Invoice Reminder</h3>
+            <p class="text-gray-600 mb-4">A polite reminder email has been drafted for you. You can copy it and send it to your client.</p>
+            <textarea id="draft-reminder-textarea" class="w-full h-80 p-2 border rounded font-mono text-sm bg-gray-50"></textarea>
+            <div class="flex items-center justify-end mt-6">
+                <button type="button" id="copy-reminder-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md mr-2">Copy to Clipboard</button>
+                <button type="button" id="cancel-reminder-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="export-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+       <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl">
+            <h3 class="text-2xl font-bold mb-4">Export Data for Scrivener</h3>
+            <p class="text-gray-600 mb-4">Copy the text below and paste it into a new document in Scrivener for offline archival. This data is formatted in Markdown.</p>
+            <textarea id="export-data-textarea" class="w-full h-96 p-2 border rounded font-mono text-sm bg-gray-50" readonly></textarea>
+            <div class="flex items-center justify-end mt-6">
+                <button type="button" id="copy-export-data-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md mr-2">Copy to Clipboard</button>
+                <button type="button" id="cancel-export-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="firm-info-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 class="text-2xl font-bold mb-4">Edit Firm Information</h3>
+            <form id="firm-info-form">
+                <div class="mb-4">
+                    <label for="firm-name" class="block text-gray-700 text-sm font-bold mb-2">Firm Name</label>
+                    <input type="text" id="firm-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="firm-address" class="block text-gray-700 text-sm font-bold mb-2">Firm Address</label>
+                    <textarea id="firm-address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="4"></textarea>
+                </div>
+                 <div class="mb-4">
+                    <label for="firm-logo-url" class="block text-gray-700 text-sm font-bold mb-2">Logo</label>
+                    <input type="file" id="firm-logo-upload" class="hidden" accept="image/png, image/jpeg">
+                    <div id="logo-drop-zone" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        <div class="space-y-1 text-center">
+                            <img id="logo-preview" src="https://placehold.co/100x100/e2e8f0/4a5568?text=Logo" class="mx-auto h-24 w-24 object-contain rounded-md">
+                            <div class="flex text-sm text-gray-600">
+                                <label for="firm-logo-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                    <span>Upload a file</span>
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG up to 3MB</p>
+                        </div>
+                    </div>
+                     <button type="button" id="remove-logo-btn" class="mt-2 text-xs text-red-500 hover:underline hidden">Remove Logo</button>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-firm-info-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Info</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Calendar Day Details Modal -->
+    <div id="calendar-day-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-xl">
+            <h3 id="calendar-day-modal-title" class="text-2xl font-bold mb-4">Entries for</h3>
+            <div id="calendar-day-modal-body" class="max-h-96 overflow-y-auto">
+                <!-- Day details will be rendered here -->
+            </div>
+            <div class="flex items-center justify-end mt-6">
+                <button type="button" id="cancel-calendar-day-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md">Close</button>
+            </div>
+        </div>
+    </div>
+
+     <!-- Task Modal -->
+    <div id="task-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
+            <h3 id="task-modal-title" class="text-2xl font-bold mb-4">New Task</h3>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                <input type="hidden" id="task-matter-id-hidden">
+                <div class="mb-4">
+                    <label for="task-matter-select" class="block text-gray-700 text-sm font-bold mb-2">Client / Matter</label>
+                    <select id="task-matter-select" class="shadow border rounded w-full py-2 px-3 text-gray-700" required></select>
+                </div>
+                <div class="mb-4">
+                    <label for="task-name" class="block text-gray-700 text-sm font-bold mb-2">Task Name</label>
+                    <input type="text" id="task-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="task-description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <textarea id="task-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="task-due-date" class="block text-gray-700 text-sm font-bold mb-2">Due Date</label>
+                        <input type="date" id="task-due-date" class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                    </div>
+                    <div>
+                        <label for="task-assigned-by" class="block text-gray-700 text-sm font-bold mb-2">Assigned By</label>
+                        <input type="text" id="task-assigned-by" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                    </div>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-task-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Budget Modal -->
+    <div id="budget-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm">
+            <h3 class="text-2xl font-bold mb-4">Set Budget</h3>
+            <form id="budget-form">
+                <input type="hidden" id="budget-client-id">
+                <div class="mb-4">
+                    <label for="client-budget-amount" class="block text-gray-700 text-sm font-bold mb-2">Budget Amount</label>
+                    <input type="number" id="client-budget-amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" step="0.01" min="0" required>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-budget-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Budget</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div id="expense-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 id="expense-modal-title" class="text-2xl font-bold mb-4">Add Expense</h3>
+            <form id="expense-form">
+                <input type="hidden" id="expense-id">
+                <input type="hidden" id="expense-matter-id">
+                <div class="mb-4">
+                    <label for="expense-date" class="block text-gray-700 text-sm font-bold mb-2">Date</label>
+                    <input type="date" id="expense-date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                <div class="mb-4">
+                    <label for="expense-description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <input type="text" id="expense-description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" required>
+                </div>
+                <div class="mb-4">
+                    <label for="expense-amount" class="block text-gray-700 text-sm font-bold mb-2">Amount</label>
+                    <input type="number" id="expense-amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" step="0.01" min="0" required>
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="button" id="cancel-expense-modal" class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const app = {
+            data: { 
+                firmInfo: { name: 'Your Law Firm', address: '123 Law St.\nAnytown, USA 12345', logoDataUrl: null },
+                clients: [], trustTransactions: [], operatingTransactions: [], invoices: [] 
+            },
+            calendar: { currentDate: new Date(), colors: ["bg-blue-200", "bg-green-200", "bg-yellow-200", "bg-purple-200", "bg-pink-200", "bg-indigo-200", "bg-red-200", "bg-teal-200"] },
+            tasks: { filterStatus: 'outstanding', filterMatter: 'all' },
+            
+            getDefaultData() {
+                return { 
+                    firmInfo: { name: 'Your Law Firm', address: '123 Law St.\nAnytown, USA 12345', logoDataUrl: null },
+                    clients: [], 
+                    trustTransactions: [], 
+                    operatingTransactions: [], 
+                    invoices: [] 
+                };
+            },
+
+            init() {
+                this.loadData();
+                this.setupEventListeners();
+                this.render();
+                this.setActiveTab('dashboard');
+                setInterval(this.updateRunningTimers.bind(this), 1000);
+            },
+
+            loadData() {
+                const data = localStorage.getItem('lawFirmData');
+                if (data) {
+                    const savedData = JSON.parse(data);
+                    this.data = { ...this.getDefaultData(), ...savedData, firmInfo: { ...this.getDefaultData().firmInfo, ...(savedData.firmInfo || {}) } };
+                } else {
+                    this.data = this.getDefaultData();
+                }
+            },
+
+            saveData() {
+                localStorage.setItem('lawFirmData', JSON.stringify(this.data));
+            },
+            
+            setupEventListeners() {
+                document.querySelectorAll('.sidebar-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.setActiveTab(e.target.dataset.tab);
+                    });
+                });
+                
+                document.getElementById('add-client-btn').addEventListener('click', () => this.openModal('client-modal'));
+                document.getElementById('add-task-btn').addEventListener('click', () => this.openTaskModal());
+                document.getElementById('add-trust-transaction-btn').addEventListener('click', () => this.openModal('trust-transaction-modal'));
+                document.getElementById('add-operating-transaction-btn').addEventListener('click', () => this.openModal('operating-transaction-modal'));
+                document.getElementById('create-invoice-btn').addEventListener('click', () => this.openModal('invoice-modal'));
+                document.getElementById('edit-firm-info-btn').addEventListener('click', this.openFirmInfoModal.bind(this));
+
+
+                document.getElementById('cancel-client-modal').addEventListener('click', () => this.closeModal('client-modal'));
+                document.getElementById('cancel-matter-modal').addEventListener('click', () => this.closeModal('matter-modal'));
+                document.getElementById('cancel-task-modal').addEventListener('click', () => this.closeModal('task-modal'));
+                document.getElementById('cancel-time-entry-modal').addEventListener('click', () => this.closeModal('time-entry-modal'));
+                document.getElementById('cancel-trust-transaction-modal').addEventListener('click', () => this.closeModal('trust-transaction-modal'));
+                document.getElementById('cancel-operating-transaction-modal').addEventListener('click', () => this.closeModal('operating-transaction-modal'));
+                document.getElementById('cancel-invoice-modal').addEventListener('click', () => this.closeModal('invoice-modal'));
+                document.getElementById('cancel-view-invoice-modal').addEventListener('click', () => this.closeModal('view-invoice-modal'));
+                document.getElementById('cancel-firm-info-modal').addEventListener('click', () => this.closeModal('firm-info-modal'));
+                document.getElementById('cancel-budget-modal').addEventListener('click', () => this.closeModal('budget-modal'));
+                document.getElementById('cancel-expense-modal').addEventListener('click', () => this.closeModal('expense-modal'));
+
+                
+                document.getElementById('client-form').addEventListener('submit', this.handleClientFormSubmit.bind(this));
+                document.getElementById('matter-form').addEventListener('submit', this.handleMatterFormSubmit.bind(this));
+                document.getElementById('task-form').addEventListener('submit', this.handleTaskFormSubmit.bind(this));
+                document.getElementById('time-entry-form').addEventListener('submit', this.handleTimeEntryFormSubmit.bind(this));
+                document.getElementById('time-entry-form').addEventListener('input', this.updateTimeEntryCalculation.bind(this));
+                document.getElementById('trust-transaction-form').addEventListener('submit', this.handleTrustTransactionFormSubmit.bind(this));
+                document.getElementById('operating-transaction-form').addEventListener('submit', this.handleOperatingTransactionFormSubmit.bind(this));
+                document.getElementById('invoice-form').addEventListener('submit', this.handleInvoiceFormSubmit.bind(this));
+                document.getElementById('firm-info-form').addEventListener('submit', this.handleFirmInfoFormSubmit.bind(this));
+                document.getElementById('budget-form').addEventListener('submit', this.handleBudgetFormSubmit.bind(this));
+                document.getElementById('expense-form').addEventListener('submit', this.handleExpenseFormSubmit.bind(this));
+                
+                document.getElementById('client-list').addEventListener('click', this.handleClientListClick.bind(this));
+                document.getElementById('task-list-body').addEventListener('click', this.handleTaskListClick.bind(this));
+                document.getElementById('invoice-list').addEventListener('click', this.handleInvoiceListClick.bind(this));
+                document.getElementById('budget-list').addEventListener('click', this.handleBudgetListClick.bind(this));
+                document.getElementById('add-line-item').addEventListener('click', () => this.addInvoiceLineItem());
+                document.getElementById('invoice-line-items').addEventListener('input', this.updateInvoiceTotal.bind(this));
+                document.getElementById('invoice-line-items').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('remove-line-item-btn')) {
+                        e.target.closest('.line-item-row').remove();
+                        this.updateInvoiceTotal();
+                    }
+                });
+
+                document.getElementById('print-invoice-btn').addEventListener('click', () => window.print());
+
+                document.getElementById('export-data-btn').addEventListener('click', this.handleExportData.bind(this));
+                document.getElementById('cancel-export-modal').addEventListener('click', () => this.closeModal('export-modal'));
+                document.getElementById('copy-export-data-btn').addEventListener('click', this.handleCopyExportData.bind(this));
+                
+                document.getElementById('cancel-confirmation-btn').addEventListener('click', () => this.closeModal('confirmation-modal'));
+                document.getElementById('confirm-delete-btn').addEventListener('click', this.handleConfirmDelete.bind(this));
+
+                document.getElementById('cancel-reminder-modal').addEventListener('click', () => this.closeModal('draft-reminder-modal'));
+                document.getElementById('copy-reminder-btn').addEventListener('click', this.handleCopyReminder.bind(this));
+
+                document.getElementById('generate-time-description-btn').addEventListener('click', this.handleGenerateTimeDescription.bind(this));
+                document.getElementById('populate-invoice-btn').addEventListener('click', this.handlePopulateInvoice.bind(this));
+                document.getElementById('suggest-category-btn').addEventListener('click', this.handleSuggestCategory.bind(this));
+
+                document.getElementById('prev-month-btn').addEventListener('click', this.changeMonth.bind(this, -1));
+                document.getElementById('next-month-btn').addEventListener('click', this.changeMonth.bind(this, 1));
+                document.getElementById('cancel-calendar-day-modal').addEventListener('click', () => this.closeModal('calendar-day-modal'));
+                document.getElementById('calendar-body').addEventListener('click', this.handleCalendarDayClick.bind(this));
+                
+                document.querySelectorAll('.task-filter-btn').forEach(btn => btn.addEventListener('click', this.handleTaskFilterClick.bind(this)));
+                document.getElementById('task-matter-filter').addEventListener('change', this.handleTaskMatterFilterChange.bind(this));
+                
+                document.addEventListener('keydown', this.handleKeyDown.bind(this));
+                this.setupLogoUploadListeners();
+            },
+            
+            handleKeyDown(e) {
+                if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+
+                if(document.querySelector('.modal.active')) return;
+
+                e.preventDefault();
+
+                const links = Array.from(document.querySelectorAll('.sidebar-link'));
+                if (links.length === 0) return;
+
+                let currentIndex = links.findIndex(link => link.classList.contains('active'));
+
+                if (currentIndex === -1) currentIndex = 0;
+                
+                let nextIndex;
+
+                if (e.key === 'ArrowUp') {
+                    nextIndex = currentIndex - 1;
+                    if (nextIndex < 0) nextIndex = links.length - 1;
+                } else {
+                    nextIndex = currentIndex + 1;
+                    if (nextIndex >= links.length) nextIndex = 0;
+                }
+
+                if (links[nextIndex]) {
+                    links[nextIndex].click();
+                }
+            },
+            
+            render() {
+                this.renderDashboard();
+                this.renderClients();
+                this.renderTasks();
+                this.renderBudget();
+                this.renderTrustTransactions();
+                this.renderOperatingTransactions();
+                this.renderInvoices();
+                this.renderSettings();
+                this.renderCalendar();
+                this.populateSelects();
+            },
+            
+            renderDashboard() {
+                const trustBalance = this.data.trustTransactions.reduce((acc, t) => acc + (t.type === 'deposit' ? t.amount : -t.amount), 0);
+                const operatingBalance = this.data.operatingTransactions.reduce((acc, t) => acc + (t.type === 'income' ? t.amount : -t.amount), 0);
+                const unpaidInvoices = this.data.invoices.filter(i => i.status === 'unpaid').length;
+                document.getElementById('dashboard-trust-balance').textContent = this.formatCurrency(trustBalance);
+                document.getElementById('dashboard-operating-balance').textContent = this.formatCurrency(operatingBalance);
+                document.getElementById('dashboard-unpaid-invoices').textContent = unpaidInvoices;
+                document.getElementById('total-trust-balance').textContent = this.formatCurrency(trustBalance);
+                document.getElementById('total-operating-balance').textContent = this.formatCurrency(operatingBalance);
+            },
+
+            renderClients() {
+                const list = document.getElementById('client-list');
+                list.innerHTML = '';
+                if (this.data.clients.length === 0) {
+                    list.innerHTML = '<p class="text-gray-500">No clients yet. Add one to get started.</p>';
+                    return;
+                }
+                this.data.clients.forEach(client => {
+                    const clientDiv = document.createElement('div');
+                    clientDiv.className = 'border-b py-4';
+                    
+                    let mattersHtml = (client.matters || []).map(matter => {
+                        const totalTime = this.calculateTotalMatterTime(matter);
+                        const timerRunning = matter.timerRunning;
+                        const runningTime = timerRunning ? Date.now() - matter.timerStartTime : 0;
+                        const timeEntriesHtml = (matter.timeEntries || []).sort((a,b) => new Date(b.date) - new Date(a.date)).map(entry => `
+                            <li class="group flex justify-between items-center text-sm py-1 ${entry.isBilled ? 'text-gray-400' : ''}">
+                                <span class="flex-grow"><span class="font-medium text-gray-500">${entry.date || ''}</span> &mdash; ${entry.description} ${entry.isBilled ? '<span class="text-xs text-gray-400 italic">(Billed)</span>' : ''}</span>
+                                <span class="font-mono text-gray-600 flex-shrink-0 mr-4">${this.formatDuration(entry.duration)} (${this.formatCurrency(entry.amount)})</span>
+                                <span class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button data-client-id="${client.id}" data-matter-id="${matter.id}" data-time-entry-id="${entry.id}" class="edit-time-entry-btn text-xs text-blue-500 hover:underline mr-2">Edit</button>
+                                    <button data-client-id="${client.id}" data-matter-id="${matter.id}" data-time-entry-id="${entry.id}" class="delete-time-entry-btn text-xs text-red-500 hover:underline">Delete</button>
+                                </span>
+                            </li>
+                        `).join('');
+
+                        const expensesHtml = (matter.expenses || []).sort((a,b) => new Date(b.date) - new Date(a.date)).map(expense => `
+                            <li class="group flex justify-between items-center text-sm py-1 ${expense.isBilled ? 'text-gray-400' : ''}">
+                                <span class="flex-grow"><span class="font-medium text-gray-500">${expense.date || ''}</span> &mdash; ${expense.description} ${expense.isBilled ? '<span class="text-xs text-gray-400 italic">(Billed)</span>' : ''}</span>
+                                <span class="font-mono text-gray-600 flex-shrink-0 mr-4">${this.formatCurrency(expense.amount)}</span>
+                                <span class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button data-matter-id="${matter.id}" data-expense-id="${expense.id}" class="edit-expense-btn text-xs text-blue-500 hover:underline mr-2">Edit</button>
+                                    <button data-matter-id="${matter.id}" data-expense-id="${expense.id}" class="delete-expense-btn text-xs text-red-500 hover:underline">Delete</button>
+                                </span>
+                            </li>
+                        `).join('');
+                        
+                        const tasksHtml = (matter.tasks || []).filter(t => t.status === 'outstanding').sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate)).map(task => `
+                            <li class="group flex justify-between items-center text-sm py-1">
+                                <span>${task.name} ${task.dueDate ? `(Due: ${task.dueDate})` : ''}</span>
+                                <span class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button data-matter-id="${matter.id}" data-task-id="${task.id}" class="edit-task-btn text-xs text-blue-500 hover:underline mr-2">Edit</button>
+                                </span>
+                            </li>
+                        `).join('');
+
+                        return `
+                            <div class="ml-4 mt-3 p-3 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h5 class="font-semibold text-gray-800">${matter.name}</h5>
+                                        <p class="text-sm text-gray-500">${matter.description}</p>
+                                    </div>
+                                    <div class="flex items-center flex-shrink-0">
+                                        <button data-matter-id="${matter.id}" class="delete-matter-btn text-xs text-red-500 hover:underline mr-4">Delete</button>
+                                        <button data-matter-id="${matter.id}" class="start-stop-timer-btn text-sm px-3 py-1 rounded ${timerRunning ? 'bg-red-500 hover:bg-red-600 text-white timer-running' : 'bg-green-500 hover:bg-green-600 text-white'}">
+                                            ${timerRunning ? 'Stop Timer' : 'Start Timer'}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-sm">
+                                    <strong class="text-gray-700">Total Time:</strong> 
+                                    <span class="font-mono" id="total-time-${matter.id}">${this.formatDuration(totalTime + runningTime)}</span>
+                                    ${timerRunning ? `<span class="font-mono text-green-600 ml-2">(Running: <span id="running-time-${matter.id}">${this.formatDuration(runningTime)}</span>)</span>` : ''}
+                                </div>
+                                 <div class="mt-4 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <h6 class="text-xs font-bold text-gray-500 uppercase">Time Entries</h6>
+                                        <ul class="mt-1 list-inside text-gray-600">
+                                            ${timeEntriesHtml || '<li class="text-gray-400 text-sm">No time entries yet.</li>'}
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-xs font-bold text-gray-500 uppercase flex justify-between items-center">
+                                            <span>Tasks</span>
+                                            <button data-matter-id="${matter.id}" class="add-task-to-matter-btn text-xs bg-gray-200 px-2 py-0.5 rounded hover:bg-gray-300">+</button>
+                                        </h6>
+                                        <ul class="mt-1 list-inside text-gray-600">
+                                            ${tasksHtml || '<li class="text-gray-400 text-sm">No outstanding tasks.</li>'}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <h6 class="text-xs font-bold text-gray-500 uppercase flex justify-between items-center">
+                                        <span>Expenses</span>
+                                        <button data-matter-id="${matter.id}" class="add-expense-to-matter-btn text-xs bg-gray-200 px-2 py-0.5 rounded hover:bg-gray-300">+</button>
+                                    </h6>
+                                    <ul class="mt-1 list-inside text-gray-600">
+                                        ${expensesHtml || '<li class="text-gray-400 text-sm">No expenses yet.</li>'}
+                                    </ul>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    if(!client.matters || client.matters.length === 0){
+                        mattersHtml = '<p class="ml-4 mt-2 text-sm text-gray-400">No matters for this client.</p>';
+                    }
+
+                    clientDiv.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-xl font-semibold">${client.name}</h4>
+                                <p class="text-gray-600 text-sm">${client.email || ''} <span class="mx-1 text-gray-300">|</span> ${client.phone || ''}</p>
+                                <p class="text-gray-500 text-xs mt-1 whitespace-pre-line">${client.address || 'No address'}</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <button data-client-id="${client.id}" class="edit-client-btn text-sm bg-gray-200 text-gray-700 px-3 py-1 rounded mr-2 hover:bg-gray-300">Edit</button>
+                                <button data-client-id="${client.id}" class="add-matter-btn text-sm bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:bg-blue-600">Add Matter</button>
+                                <button data-client-id="${client.id}" class="delete-client-btn text-sm bg-red-100 text-red-700 px-3 py-1 rounded hover:bg-red-200">Delete</button>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            ${mattersHtml}
+                        </div>`;
+                    list.appendChild(clientDiv);
+                });
+            },
+            
+            renderTasks() {
+                const taskBody = document.getElementById('task-list-body');
+                taskBody.innerHTML = '';
+
+                let allTasks = [];
+                this.data.clients.forEach(client => {
+                    (client.matters || []).forEach(matter => {
+                        (matter.tasks || []).forEach(task => {
+                            allTasks.push({ ...task, matterName: matter.name, clientName: client.name });
+                        });
+                    });
+                });
+
+                // Apply filters
+                const filteredTasks = allTasks.filter(task => {
+                    const statusMatch = task.status === this.tasks.filterStatus;
+                    const matterMatch = this.tasks.filterMatter === 'all' || task.matterId === this.tasks.filterMatter;
+                    return statusMatch && matterMatch;
+                });
+
+                filteredTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+                if (filteredTasks.length === 0) {
+                    taskBody.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 p-4">No tasks found for the selected filters.</td></tr>`;
+                    return;
+                }
+
+                filteredTasks.forEach(task => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b hover:bg-gray-50';
+                    const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status === 'outstanding';
+
+                    let actionButton = `<button data-matter-id="${task.matterId}" data-task-id="${task.id}" class="mark-task-complete-btn text-sm bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200">Mark Complete</button>`;
+                    if (task.status === 'completed') {
+                        actionButton = `<span class="text-sm text-gray-500">Completed</span>`;
+                    }
+                    
+                    row.innerHTML = `
+                        <td class="p-2 ${isOverdue ? 'text-red-500 font-semibold' : ''}">${task.dueDate || 'No due date'}</td>
+                        <td class="p-2">
+                            <p class="font-semibold">${task.name}</p>
+                            <p class="text-sm text-gray-600">${task.description}</p>
+                        </td>
+                        <td class="p-2 text-sm">${task.clientName} / ${task.matterName}</td>
+                        <td class="p-2 text-sm">${task.assignedBy || 'N/A'}</td>
+                        <td class="p-2 text-center">
+                            ${actionButton}
+                             <button data-matter-id="${task.matterId}" data-task-id="${task.id}" class="edit-task-btn text-xs text-blue-500 hover:underline ml-2">Edit</button>
+                             <button data-matter-id="${task.matterId}" data-task-id="${task.id}" class="delete-task-btn text-xs text-red-500 hover:underline ml-2">Delete</button>
+                        </td>
+                    `;
+                    taskBody.appendChild(row);
+                });
+            },
+            
+            renderBudget() {
+                const budgetList = document.getElementById('budget-list');
+                budgetList.innerHTML = '';
+                if (this.data.clients.length === 0) {
+                    budgetList.innerHTML = '<p class="text-gray-500">No clients yet. Add a client to set a budget.</p>';
+                    return;
+                }
+                this.data.clients.forEach(client => {
+                    const budget = client.budget || 0;
+                    const invoicedTotal = this.data.invoices
+                        .filter(inv => (client.matters || []).map(m => m.id).includes(inv.matterId))
+                        .reduce((acc, inv) => acc + inv.total, 0);
+
+                    const percentage = budget > 0 ? (invoicedTotal / budget) * 100 : 0;
+                    let colorClass = 'bg-green-500';
+                    if (percentage > 90) colorClass = 'bg-red-500';
+                    else if (percentage > 70) colorClass = 'bg-yellow-500';
+
+                    const clientBudgetDiv = document.createElement('div');
+                    clientBudgetDiv.className = 'bg-white p-4 rounded-lg shadow';
+                    clientBudgetDiv.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-lg font-semibold">${client.name}</h4>
+                            <button data-client-id="${client.id}" class="set-budget-btn text-sm bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300">Set Budget</button>
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>${this.formatCurrency(invoicedTotal)}</span>
+                                <span>${this.formatCurrency(budget)}</span>
+                            </div>
+                            <div class="progress-bar w-full h-4">
+                                <div class="progress-bar-inner ${colorClass}" style="width: ${Math.min(percentage, 100)}%;"></div>
+                            </div>
+                        </div>
+                    `;
+                    budgetList.appendChild(clientBudgetDiv);
+                });
+            },
+            
+            renderTrustTransactions() {
+                 const tbody = document.getElementById('trust-transactions-body');
+                 tbody.innerHTML = '';
+                 this.data.trustTransactions.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                     const client = this.findClientByMatterId(t.matterId);
+                     const matter = this.findMatterById(t.matterId);
+                     const row = document.createElement('tr');
+                     row.className = 'border-b hover:bg-gray-50';
+                     row.innerHTML = `
+                         <td class="p-2">${t.date}</td>
+                         <td class="p-2">${client ? client.name : 'N/A'} / ${matter ? matter.name : 'N/A'}</td>
+                         <td class="p-2">${t.description}</td>
+                         <td class="p-2"><span class="px-2 py-1 text-xs rounded ${t.type === 'deposit' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td>
+                         <td class="p-2 text-right font-mono">${this.formatCurrency(t.amount)}</td>
+                     `;
+                     tbody.appendChild(row);
+                 });
+            },
+            
+            renderOperatingTransactions() {
+                const tbody = document.getElementById('operating-transactions-body');
+                tbody.innerHTML = '';
+                this.data.operatingTransactions.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                     const row = document.createElement('tr');
+                     row.className = 'border-b hover:bg-gray-50';
+                     row.innerHTML = `
+                         <td class="p-2">${t.date}</td>
+                         <td class="p-2">${t.category}</td>
+                         <td class="p-2">${t.description}</td>
+                         <td class="p-2"><span class="px-2 py-1 text-xs rounded ${t.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${t.type}</span></td>
+                         <td class="p-2 text-right font-mono">${this.formatCurrency(t.amount)}</td>
+                     `;
+                     tbody.appendChild(row);
+                 });
+            },
+            
+            renderInvoices() {
+                const tbody = document.getElementById('invoices-body');
+                tbody.innerHTML = '';
+                this.data.invoices.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(inv => {
+                    const client = this.findClientByMatterId(inv.matterId);
+                    const matter = this.findMatterById(inv.matterId);
+                    const row = document.createElement('tr');
+                    row.className = 'border-b hover:bg-gray-50';
+                    let actionsHtml = `<button data-invoice-id="${inv.id}" class="view-invoice-btn text-blue-600 hover:underline text-sm">View</button>
+                    <button data-invoice-id="${inv.id}" class="edit-invoice-btn text-blue-600 hover:underline text-sm ml-2">Edit</button>
+                    <button data-invoice-id="${inv.id}" class="delete-invoice-btn text-red-600 hover:underline text-sm ml-2">Delete</button>`;
+                    if (inv.status === 'unpaid') {
+                        actionsHtml += `<button data-invoice-id="${inv.id}" class="draft-reminder-btn ml-4 text-purple-600 hover:underline text-sm flex items-center gap-1">
+                                            <span class="btn-text">✨ Draft Reminder</span>
+                                            <span class="spinner hidden"></span>
+                                        </button>`;
+                    }
+
+                    row.innerHTML = `
+                        <td class="p-2 font-mono">${inv.id}</td>
+                        <td class="p-2">${client ? client.name : 'N/A'} / ${matter ? matter.name : 'N/A'}</td>
+                        <td class="p-2">${inv.date}</td>
+                        <td class="p-2">
+                            <select data-invoice-id="${inv.id}" class="invoice-status-select border rounded px-2 py-1 text-sm">
+                                <option value="unpaid" ${inv.status === 'unpaid' ? 'selected' : ''}>Unpaid</option>
+                                <option value="paid" ${inv.status === 'paid' ? 'selected' : ''}>Paid</option>
+                            </select>
+                        </td>
+                        <td class="p-2 text-right font-mono">${this.formatCurrency(inv.total)}</td>
+                        <td class="p-2 text-center">${actionsHtml}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            },
+
+            renderSettings() {
+                document.getElementById('firm-name-display').textContent = this.data.firmInfo.name;
+                document.getElementById('firm-address-display').innerHTML = this.data.firmInfo.address.replace(/\n/g, '<br>');
+                const logoDisplay = document.getElementById('firm-logo-display');
+                if (this.data.firmInfo.logoDataUrl) {
+                    logoDisplay.src = this.data.firmInfo.logoDataUrl;
+                } else {
+                    logoDisplay.src = 'https://placehold.co/100x100/e2e8f0/4a5568?text=Logo';
+                }
+            },
+            
+            renderCalendar() {
+                const calBody = document.getElementById('calendar-body');
+                const monthYearEl = document.getElementById('calendar-month-year');
+                
+                calBody.innerHTML = '';
+                
+                const date = this.calendar.currentDate;
+                const year = date.getFullYear();
+                const month = date.getMonth();
+
+                monthYearEl.textContent = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                const eventsByDate = this.getEventsByDate();
+
+                let dateCounter = 1;
+                for (let i = 0; i < 6; i++) {
+                    const row = document.createElement('tr');
+                    for (let j = 0; j < 7; j++) {
+                        const cell = document.createElement('td');
+                        cell.className = 'p-2 border h-24 align-top';
+                        if (i === 0 && j < firstDayOfMonth) {
+                            cell.classList.add('bg-gray-50');
+                        } else if (dateCounter > daysInMonth) {
+                            cell.classList.add('bg-gray-50');
+                        } else {
+                            const currentDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dateCounter).padStart(2, '0')}`;
+                            cell.dataset.date = currentDateStr;
+
+                            const daySpan = document.createElement('span');
+                            daySpan.textContent = dateCounter;
+                            daySpan.className = 'text-sm font-semibold';
+                            if (new Date().toDateString() === new Date(year, month, dateCounter).toDateString()) {
+                                daySpan.classList.add('bg-blue-600', 'text-white', 'rounded-full', 'px-2', 'py-1');
+                            }
+                            cell.appendChild(daySpan);
+
+                            if (eventsByDate[currentDateStr]) {
+                                cell.classList.add('cursor-pointer', 'hover:bg-gray-100');
+                                const eventsContainer = document.createElement('div');
+                                eventsContainer.className = "mt-1";
+                                eventsByDate[currentDateStr].forEach(event => {
+                                    const eventEl = document.createElement('div');
+                                    eventEl.className = `calendar-event ${this.getClientColor(event.clientId)}`;
+                                    eventEl.textContent = event.matterName;
+                                    eventsContainer.appendChild(eventEl);
+                                });
+                                cell.appendChild(eventsContainer);
+                            }
+
+                            dateCounter++;
+                        }
+                        row.appendChild(cell);
+                    }
+                    calBody.appendChild(row);
+                }
+            },
+            
+            getEventsByDate() {
+                const events = {};
+                this.data.clients.forEach((client, clientIndex) => {
+                    (client.matters || []).forEach(matter => {
+                        (matter.timeEntries || []).forEach(entry => {
+                            if (entry.date) {
+                                if (!events[entry.date]) {
+                                    events[entry.date] = [];
+                                }
+                                events[entry.date].push({
+                                    clientName: client.name,
+                                    clientId: client.id,
+                                    matterName: matter.name,
+                                    description: entry.description,
+                                    duration: entry.duration,
+                                });
+                            }
+                        });
+                    });
+                });
+                return events;
+            },
+
+            changeMonth(direction) {
+                const currentMonth = this.calendar.currentDate.getMonth();
+                this.calendar.currentDate.setMonth(currentMonth + direction);
+                this.renderCalendar();
+            },
+
+            handleCalendarDayClick(e) {
+                const cell = e.target.closest('td');
+                if (!cell || !cell.dataset.date) return;
+                
+                const date = cell.dataset.date;
+                const events = this.getEventsByDate()[date];
+
+                if (!events) return;
+
+                const modalTitle = document.getElementById('calendar-day-modal-title');
+                const modalBody = document.getElementById('calendar-day-modal-body');
+                modalTitle.textContent = `Entries for ${new Date(date + 'T00:00:00').toLocaleDateString()}`; // Fix timezone issue
+                
+                modalBody.innerHTML = '';
+                events.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = `p-3 rounded-lg mb-2 ${this.getClientColor(event.clientId)}`;
+                    eventDiv.innerHTML = `
+                        <p class="font-bold">${event.clientName} / ${event.matterName}</p>
+                        <p>${event.description}</p>
+                        <p class="text-sm font-mono text-gray-700 mt-1">Duration: ${this.formatDuration(event.duration)}</p>
+                    `;
+                    modalBody.appendChild(eventDiv);
+                });
+                
+                this.openModal('calendar-day-modal');
+            },
+
+            getClientColor(clientId) {
+                // Generate a consistent color based on the client ID
+                let hash = 0;
+                for (let i = 0; i < clientId.length; i++) {
+                    hash = clientId.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const index = Math.abs(hash % this.calendar.colors.length);
+                return this.calendar.colors[index];
+            },
+
+            setActiveTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                
+                document.querySelectorAll('.sidebar-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.tab === tabId) {
+                        link.classList.add('active');
+                    }
+                });
+            },
+            
+            openModal(modalId) {
+                document.getElementById(modalId).classList.add('active');
+                if (modalId === 'client-modal') {
+                    document.getElementById('client-form').reset();
+                    document.getElementById('client-id').value = '';
+                    document.getElementById('client-modal-title').textContent = 'Add New Client';
+                }
+                if (modalId === 'invoice-modal') {
+                    this.resetInvoiceForm();
+                }
+            },
+            
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            },
+            
+            populateSelects() {
+                const trustSelect = document.getElementById('trust-transaction-client');
+                const invoiceSelect = document.getElementById('invoice-client');
+                const taskMatterSelect = document.getElementById('task-matter-select');
+                const taskMatterFilter = document.getElementById('task-matter-filter');
+                trustSelect.innerHTML = '<option value="">Select a matter...</option>';
+                invoiceSelect.innerHTML = '<option value="">Select a matter...</option>';
+                taskMatterSelect.innerHTML = '<option value="">Select a matter...</option>';
+                taskMatterFilter.innerHTML = '<option value="all">All Matters</option>';
+
+                 this.data.clients.forEach(client => {
+                    (client.matters || []).forEach(matter => {
+                        const option = document.createElement('option');
+                        option.value = matter.id;
+                        option.textContent = `${client.name} / ${matter.name}`;
+                        trustSelect.appendChild(option.cloneNode(true));
+                        invoiceSelect.appendChild(option.cloneNode(true));
+                        taskMatterSelect.appendChild(option.cloneNode(true));
+                        taskMatterFilter.appendChild(option.cloneNode(true));
+                    });
+                });
+            },
+            
+            async callGeminiAPI(prompt, buttonEl) {
+                if (buttonEl) {
+                    const btnText = buttonEl.querySelector('.btn-text');
+                    const spinner = buttonEl.querySelector('.spinner');
+                    if (btnText) btnText.classList.add('hidden');
+                    if (spinner) spinner.classList.remove('hidden');
+                    buttonEl.disabled = true;
+                }
+
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                        throw new Error(`API Error: ${response.status} - ${errorBody}`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        this.showToast('✨ AI generation complete!', 'success');
+                        return candidate.content.parts[0].text.trim();
+                    } else {
+                        console.error('Unexpected API response:', result);
+                        throw new Error('Could not extract text from API response.');
+                    }
+                } catch (error) {
+                    console.error('Gemini API Error:', error);
+                    this.showToast(`Error: ${error.message}`, 'error');
+                    return null;
+                } finally {
+                    if (buttonEl) {
+                        const btnText = buttonEl.querySelector('.btn-text');
+                        const spinner = buttonEl.querySelector('.spinner');
+                        if (btnText) btnText.classList.remove('hidden');
+                        if (spinner) spinner.classList.add('hidden');
+                        buttonEl.disabled = false;
+                    }
+                }
+            },
+
+            async handleGenerateTimeDescription(e) {
+                const buttonEl = e.currentTarget;
+                const descriptionTextarea = document.getElementById('time-entry-description');
+                const keywords = descriptionTextarea.value;
+                if (!keywords.trim()) {
+                    this.showToast('Please enter some keywords first.', 'error');
+                    return;
+                }
+
+                const prompt = `You are a paralegal writing billing entries. Expand the following keywords into a professional, detailed billing description suitable for a client invoice. Be concise but thorough, using standard legal billing language. Keywords: "${keywords}"`;
+                
+                const result = await this.callGeminiAPI(prompt, buttonEl);
+                if (result) {
+                    descriptionTextarea.value = result;
+                }
+            },
+            
+            async handlePopulateInvoice(e) {
+                const buttonEl = e.currentTarget;
+                const matterId = document.getElementById('invoice-client').value;
+                if (!matterId) {
+                    this.showToast('Please select a Client/Matter first.', 'error');
+                    return;
+                }
+
+                const { matter } = this.findMatterById(matterId, true);
+                const unbilledEntries = (matter.timeEntries || []).filter(entry => !entry.isBilled);
+                const unbilledExpenses = (matter.expenses || []).filter(exp => !exp.isBilled);
+
+                if (unbilledEntries.length === 0 && unbilledExpenses.length === 0) {
+                    this.showToast('No unbilled time or expenses found for this matter.', 'info');
+                    return;
+                }
+
+                const lineItemsContainer = document.getElementById('invoice-line-items');
+                lineItemsContainer.innerHTML = '';
+                
+                const entryIds = [];
+                unbilledEntries.forEach(entry => {
+                    entryIds.push(entry.id);
+                    this.addInvoiceLineItem(entry.description, (entry.duration / 3600000).toFixed(2), entry.rate);
+                });
+                
+                const expenseIds = [];
+                unbilledExpenses.forEach(expense => {
+                    expenseIds.push(expense.id);
+                    this.addInvoiceLineItem(expense.description, 1, expense.amount);
+                });
+
+                document.getElementById('invoice-form').dataset.billedEntryIds = JSON.stringify(entryIds);
+                document.getElementById('invoice-form').dataset.billedExpenseIds = JSON.stringify(expenseIds);
+
+
+                this.updateInvoiceTotal();
+                
+                const descriptions = unbilledEntries.map(entry => `- ${entry.description}`).join('\n');
+                const expenseDescriptions = unbilledExpenses.map(exp => `- ${exp.description} (${this.formatCurrency(exp.amount)})`).join('\n');
+                
+                const prompt = `Summarize the following list of legal tasks and expenses into a short, professional paragraph for a client invoice summary. Combine related tasks where appropriate and present a cohesive narrative of the work performed during this billing period.\n\nTasks:\n${descriptions}\n\nExpenses:\n${expenseDescriptions}`;
+
+                const summary = await this.callGeminiAPI(prompt, buttonEl);
+                if (summary) {
+                    document.getElementById('invoice-notes').value = summary;
+                }
+            },
+            
+            async handleSuggestCategory(e) {
+                const buttonEl = e.currentTarget;
+                const description = document.getElementById('operating-transaction-description').value;
+                if (!description.trim()) {
+                    this.showToast('Please enter a description first.', 'error');
+                    return;
+                }
+
+                const categories = [
+                    'Bar Dues & CLE', 'Malpractice Insurance', 'Software & Subscriptions', 
+                    'Office Rent', 'Marketing & Advertising', 'Office Supplies', 
+                    'Merchant & Bank Fees', 'Professional Services', 'Client Costs', 'Other'
+                ].join(', ');
+
+                const prompt = `Based on the following expense description for a law firm, suggest the most appropriate accounting category. The description is: "${description}". Choose from one of the following categories: ${categories}. Respond with only the category name.`;
+                
+                const result = await this.callGeminiAPI(prompt, buttonEl);
+                if (result) {
+                    document.getElementById('operating-transaction-category').value = result.replace(/["'.]/g, '');
+                }
+            },
+            
+            async handleDraftReminder(buttonEl) {
+                const invoiceId = buttonEl.dataset.invoiceId;
+                const invoice = this.data.invoices.find(i => i.id === invoiceId);
+                if (!invoice) return;
+
+                const client = this.findClientByMatterId(invoice.matterId);
+
+                const prompt = `You are a professional but friendly law firm administrator. Draft a polite reminder email to a client regarding an overdue invoice. Keep the tone courteous and professional.
+                
+                Client Name: ${client.name}
+                Invoice #: ${invoice.id}
+                Amount Due: ${this.formatCurrency(invoice.total)}
+                Invoice Date: ${invoice.date}
+
+                Structure the email with a subject line and a body. Address the client by their first name if possible. Assume your name is Alex from [Your Law Firm Name].`;
+
+                const result = await this.callGeminiAPI(prompt, buttonEl);
+                if (result) {
+                    document.getElementById('draft-reminder-textarea').value = result;
+                    this.openModal('draft-reminder-modal');
+                }
+            },
+            
+            handleCopyReminder() {
+                const textarea = document.getElementById('draft-reminder-textarea');
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    this.showToast('Reminder email copied to clipboard!', 'success');
+                } catch (err) {
+                    this.showToast('Error copying text.', 'error');
+                }
+            },
+
+            handleClientFormSubmit(e) {
+                e.preventDefault();
+                const id = document.getElementById('client-id').value;
+                const name = document.getElementById('client-name').value;
+                const email = document.getElementById('client-email').value;
+                const phone = document.getElementById('client-phone').value;
+                const address = document.getElementById('client-address').value;
+
+                if (id) {
+                    const client = this.data.clients.find(c => c.id === id);
+                    if (client) {
+                        client.name = name;
+                        client.email = email;
+                        client.phone = phone;
+                        client.address = address;
+                    }
+                } else {
+                    this.data.clients.push({
+                        id: 'C' + Date.now(),
+                        name, email, phone, address,
+                        budget: 0,
+                        matters: []
+                    });
+                }
+                this.saveData();
+                this.render();
+                this.closeModal('client-modal');
+            },
+            
+            handleMatterFormSubmit(e) {
+                e.preventDefault();
+                const clientId = document.getElementById('matter-client-id').value;
+                const name = document.getElementById('matter-name').value;
+                const description = document.getElementById('matter-description').value;
+                
+                const client = this.data.clients.find(c => c.id === clientId);
+                if (client) {
+                    if (!client.matters) client.matters = [];
+                    client.matters.push({
+                        id: 'M' + Date.now(),
+                        name, description,
+                        timeEntries: [],
+                        tasks: [], 
+                        expenses: [],
+                        timerRunning: false,
+                        timerStartTime: null
+                    });
+                }
+                this.saveData();
+                this.render();
+                this.closeModal('matter-modal');
+            },
+
+            handleTaskFormSubmit(e) {
+                e.preventDefault();
+                const taskId = document.getElementById('task-id').value;
+                const matterId = document.getElementById('task-matter-select').value;
+                
+                const taskData = {
+                    name: document.getElementById('task-name').value,
+                    description: document.getElementById('task-description').value,
+                    dueDate: document.getElementById('task-due-date').value,
+                    assignedBy: document.getElementById('task-assigned-by').value,
+                };
+
+                const { matter } = this.findMatterById(matterId, true);
+                if (!matter) {
+                    this.showToast('Could not find the selected matter.', 'error');
+                    return;
+                }
+
+                if (!matter.tasks) matter.tasks = [];
+
+                if (taskId) { // Editing existing task
+                    const task = matter.tasks.find(t => t.id === taskId);
+                    if (task) {
+                        Object.assign(task, taskData);
+                    }
+                } else { // Creating new task
+                    matter.tasks.push({
+                        ...taskData,
+                        id: 'TSK' + Date.now(),
+                        status: 'outstanding',
+                        creationDate: new Date().toISOString().split('T')[0],
+                        matterId: matterId,
+                    });
+                }
+
+                this.saveData();
+                this.render();
+                this.closeModal('task-modal');
+            },
+
+            handleTimeEntryFormSubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                const id = form['time-entry-id'].value;
+                const matterId = form['time-entry-matter-id'].value;
+                const { matter } = this.findMatterById(matterId, true);
+                
+                if (!matter) {
+                    this.showToast('Error: Could not find matter.', 'error');
+                    return;
+                }
+
+                const hours = parseInt(form['time-entry-hours'].value || 0);
+                const minutes = parseInt(form['time-entry-minutes'].value || 0);
+                const seconds = parseInt(form['time-entry-seconds'].value || 0);
+                const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
+                
+                const rate = parseFloat(form['time-entry-rate'].value);
+                const amount = (duration / 3600000) * rate; // amount = (duration in hours) * rate
+
+                const entryData = {
+                    date: form['time-entry-date'].value,
+                    description: form['time-entry-description'].value,
+                    duration,
+                    rate,
+                    amount,
+                };
+                
+                if (id) {
+                    const entry = matter.timeEntries.find(te => te.id === id);
+                    if (entry) {
+                        Object.assign(entry, entryData);
+                    }
+                } else {
+                    matter.timeEntries.push({
+                        ...entryData,
+                        id: 'TE' + Date.now(),
+                        isBilled: false,
+                    });
+                }
+                
+                this.saveData();
+                this.render();
+                this.closeModal('time-entry-modal');
+            },
+            
+            handleTrustTransactionFormSubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                const transaction = {
+                    id: 'T' + Date.now(),
+                    matterId: form['trust-transaction-client'].value,
+                    date: form['trust-transaction-date'].value,
+                    type: form['trust-transaction-type'].value,
+                    description: form['trust-transaction-description'].value,
+                    amount: parseFloat(form['trust-transaction-amount'].value)
+                };
+
+                // --- RPC 1.15A / 4.C Overdraft Protection Safeguard ---
+                if (transaction.type === 'withdrawal') {
+                    const currentBalance = this.getClientLedgerBalance(transaction.matterId);
+                    if (transaction.amount > currentBalance) {
+                        this.showToast(`Error: Withdrawal of ${this.formatCurrency(transaction.amount)} exceeds the client's current trust balance of ${this.formatCurrency(currentBalance)}.`, 'error');
+                        return; // Block the transaction
+                    }
+                }
+                // --- End Safeguard ---
+
+                this.data.trustTransactions.push(transaction);
+                this.saveData();
+                this.render();
+                this.closeModal('trust-transaction-modal');
+                form.reset();
+            },
+            
+            handleOperatingTransactionFormSubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                this.data.operatingTransactions.push({
+                    id: 'O' + Date.now(),
+                    date: form['operating-transaction-date'].value,
+                    type: form['operating-transaction-type'].value,
+                    category: form['operating-transaction-category'].value,
+                    description: form['operating-transaction-description'].value,
+                    amount: parseFloat(form['operating-transaction-amount'].value)
+                });
+                this.saveData();
+                this.render();
+                this.closeModal('operating-transaction-modal');
+                form.reset();
+            },
+            
+            handleInvoiceFormSubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                const id = form['invoice-id'].value;
+                
+                const lineItems = [];
+                document.querySelectorAll('#invoice-line-items .line-item-row').forEach(row => {
+                    lineItems.push({
+                        description: row.querySelector('.line-item-desc').value,
+                        quantity: parseFloat(row.querySelector('.line-item-qty').value),
+                        rate: parseFloat(row.querySelector('.line-item-rate').value),
+                    });
+                });
+                
+                const total = lineItems.reduce((acc, item) => acc + (item.quantity * item.rate), 0);
+                
+                const invoiceData = {
+                    matterId: form['invoice-client'].value,
+                    date: form['invoice-date'].value,
+                    notes: form['invoice-notes'].value,
+                    lineItems,
+                    total
+                };
+                
+                if (id) {
+                    const invoice = this.data.invoices.find(i => i.id === id);
+                    if (invoice) {
+                        Object.assign(invoice, invoiceData);
+                    }
+                } else {
+                    invoiceData.id = 'INV' + Date.now();
+                    invoiceData.status = 'unpaid';
+                    this.data.invoices.push(invoiceData);
+                    
+                    // Mark items as billed
+                    const billedEntryIds = JSON.parse(form.dataset.billedEntryIds || '[]');
+                    const billedExpenseIds = JSON.parse(form.dataset.billedExpenseIds || '[]');
+                    const { matter } = this.findMatterById(invoiceData.matterId, true);
+                    if (matter) {
+                        (matter.timeEntries || []).forEach(entry => {
+                            if (billedEntryIds.includes(entry.id)) {
+                                entry.isBilled = true;
+                            }
+                        });
+                        (matter.expenses || []).forEach(exp => {
+                            if (billedExpenseIds.includes(exp.id)) {
+                                exp.isBilled = true;
+                            }
+                        });
+                    }
+                }
+
+                this.saveData();
+                this.render();
+                this.closeModal('invoice-modal');
+                form.reset();
+            },
+            
+            handleFirmInfoFormSubmit(e) {
+                e.preventDefault();
+                this.data.firmInfo.name = document.getElementById('firm-name').value;
+                this.data.firmInfo.address = document.getElementById('firm-address').value;
+                // Logo data URL is saved when uploaded/dragged
+                this.saveData();
+                this.renderSettings();
+                this.closeModal('firm-info-modal');
+            },
+
+            handleBudgetFormSubmit(e) {
+                e.preventDefault();
+                const clientId = document.getElementById('budget-client-id').value;
+                const amount = parseFloat(document.getElementById('client-budget-amount').value);
+                const client = this.data.clients.find(c => c.id === clientId);
+                if (client) {
+                    client.budget = amount;
+                    this.saveData();
+                    this.renderBudget();
+                    this.closeModal('budget-modal');
+                }
+            },
+            
+            handleExpenseFormSubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                const id = form['expense-id'].value;
+                const matterId = form['expense-matter-id'].value;
+                const { matter } = this.findMatterById(matterId, true);
+
+                if (!matter) {
+                    this.showToast('Error: Could not find matter.', 'error');
+                    return;
+                }
+
+                const expenseData = {
+                    date: form['expense-date'].value,
+                    description: form['expense-description'].value,
+                    amount: parseFloat(form['expense-amount'].value)
+                };
+
+                if (id) {
+                    const expense = matter.expenses.find(ex => ex.id === id);
+                    if (expense) {
+                        Object.assign(expense, expenseData);
+                    }
+                } else {
+                    if (!matter.expenses) matter.expenses = [];
+                    matter.expenses.push({
+                        ...expenseData,
+                        id: 'EXP' + Date.now(),
+                        isBilled: false
+                    });
+                }
+
+                this.saveData();
+                this.render();
+                this.closeModal('expense-modal');
+            },
+
+            handleClientListClick(e) {
+                const target = e.target;
+                const clientId = target.dataset.clientId;
+                const matterId = target.dataset.matterId;
+                
+                if (target.classList.contains('add-matter-btn')) {
+                    document.getElementById('matter-form').reset();
+                    document.getElementById('matter-client-id').value = clientId;
+                    document.getElementById('matter-modal-title').textContent = 'Add New Matter';
+                    this.openModal('matter-modal');
+                } else if (target.classList.contains('edit-client-btn')) {
+                    const client = this.data.clients.find(c => c.id === clientId);
+                    if (client) {
+                        document.getElementById('client-id').value = client.id;
+                        document.getElementById('client-name').value = client.name;
+                        document.getElementById('client-email').value = client.email;
+                        document.getElementById('client-phone').value = client.phone;
+                        document.getElementById('client-address').value = client.address;
+                        document.getElementById('client-modal-title').textContent = 'Edit Client';
+                        this.openModal('client-modal');
+                    }
+                } else if (target.classList.contains('delete-client-btn')) {
+                    this.openConfirmationModal(
+                        'Delete Client?',
+                        'Are you sure you want to delete this client and all associated matters, tasks, and entries? This cannot be undone.',
+                        () => this.deleteClient(clientId)
+                    );
+                } else if (target.classList.contains('delete-matter-btn')) {
+                    this.openConfirmationModal(
+                        'Delete Matter?',
+                        'Are you sure you want to delete this matter and all its entries? This cannot be undone.',
+                        () => this.deleteMatter(matterId)
+                    );
+                } else if (target.classList.contains('start-stop-timer-btn')) {
+                    this.toggleTimer(matterId);
+                } else if (target.classList.contains('add-task-to-matter-btn')) {
+                    this.openTaskModal(matterId);
+                } else if (target.classList.contains('add-expense-to-matter-btn')) {
+                    this.openExpenseModal(matterId);
+                } else if (target.classList.contains('edit-task-btn')) {
+                    const taskId = target.dataset.taskId;
+                    this.openTaskModal(matterId, taskId);
+                } else if (target.classList.contains('edit-expense-btn')) {
+                    const expenseId = target.dataset.expenseId;
+                    this.openExpenseModal(matterId, expenseId);
+                } else if (target.classList.contains('delete-expense-btn')) {
+                    const expenseId = target.dataset.expenseId;
+                     this.openConfirmationModal('Delete Expense?', 'Are you sure?', () => this.deleteExpense(matterId, expenseId));
+                } else if (target.classList.contains('edit-time-entry-btn')) {
+                    const timeEntryId = target.dataset.timeEntryId;
+                    this.openTimeEntryModal(matterId, timeEntryId);
+                } else if (target.classList.contains('delete-time-entry-btn')) {
+                    const timeEntryId = target.dataset.timeEntryId;
+                    this.openConfirmationModal('Delete Time Entry?', 'Are you sure?', () => this.deleteTimeEntry(matterId, timeEntryId));
+                }
+            },
+            
+            handleTaskListClick(e) {
+                const target = e.target;
+                const matterId = target.dataset.matterId;
+                const taskId = target.dataset.taskId;
+
+                if (target.classList.contains('mark-task-complete-btn')) {
+                    const { task } = this.findTaskById(taskId);
+                    if (task) {
+                        task.status = 'completed';
+                        this.saveData();
+                        this.renderTasks();
+                    }
+                } else if (target.classList.contains('edit-task-btn')) {
+                    this.openTaskModal(matterId, taskId);
+                } else if (target.classList.contains('delete-task-btn')) {
+                    this.openConfirmationModal('Delete Task?', 'Are you sure?', () => this.deleteTask(matterId, taskId));
+                }
+            },
+            
+            handleInvoiceListClick(e) {
+                const target = e.target;
+                const invoiceId = target.dataset.invoiceId;
+
+                if (target.classList.contains('invoice-status-select')) {
+                    const invoice = this.data.invoices.find(i => i.id === invoiceId);
+                    if (invoice) {
+                        invoice.status = target.value;
+                        this.saveData();
+                        this.renderDashboard(); // Update dashboard count
+                    }
+                } else if (target.classList.contains('view-invoice-btn')) {
+                    this.renderInvoiceForView(invoiceId);
+                    this.openModal('view-invoice-modal');
+                } else if (target.classList.contains('edit-invoice-btn')) {
+                    this.openInvoiceModalForEdit(invoiceId);
+                } else if (target.classList.contains('delete-invoice-btn')) {
+                    this.openConfirmationModal('Delete Invoice?', 'This will not un-bill time entries. Are you sure?', () => this.deleteInvoice(invoiceId));
+                } else if (target.classList.contains('draft-reminder-btn')) {
+                    e.preventDefault();
+                    this.handleDraftReminder(target);
+                }
+            },
+            
+            handleBudgetListClick(e) {
+                const target = e.target;
+                if (target.classList.contains('set-budget-btn')) {
+                    const clientId = target.dataset.clientId;
+                    const client = this.data.clients.find(c => c.id === clientId);
+                    if (client) {
+                        document.getElementById('budget-client-id').value = clientId;
+                        document.getElementById('client-budget-amount').value = client.budget || 0;
+                        this.openModal('budget-modal');
+                    }
+                }
+            },
+            
+            handleTaskFilterClick(e) {
+                const status = e.currentTarget.dataset.status;
+                this.tasks.filterStatus = status;
+                document.querySelectorAll('.task-filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                this.renderTasks();
+            },
+
+            handleTaskMatterFilterChange(e) {
+                this.tasks.filterMatter = e.target.value;
+                this.renderTasks();
+            },
+
+            openTaskModal(matterId = null, taskId = null) {
+                const form = document.getElementById('task-form');
+                form.reset();
+                document.getElementById('task-id').value = '';
+                document.getElementById('task-matter-id-hidden').value = '';
+                
+                const matterSelect = document.getElementById('task-matter-select');
+                matterSelect.disabled = false;
+
+                if (taskId) { // Editing
+                    const { task, matter } = this.findTaskById(taskId);
+                    if (task && matter) {
+                        document.getElementById('task-modal-title').textContent = 'Edit Task';
+                        document.getElementById('task-id').value = task.id;
+                        document.getElementById('task-matter-select').value = matter.id;
+                        document.getElementById('task-name').value = task.name;
+                        document.getElementById('task-description').value = task.description;
+                        document.getElementById('task-due-date').value = task.dueDate;
+                        document.getElementById('task-assigned-by').value = task.assignedBy;
+                        matterSelect.disabled = true;
+                    }
+                } else if (matterId) { // Adding to a specific matter
+                    document.getElementById('task-modal-title').textContent = 'New Task';
+                    document.getElementById('task-matter-select').value = matterId;
+                    matterSelect.disabled = true;
+                } else { // Adding from main task page
+                    document.getElementById('task-modal-title').textContent = 'New Task';
+                }
+                
+                this.openModal('task-modal');
+            },
+            
+            openExpenseModal(matterId, expenseId = null) {
+                const form = document.getElementById('expense-form');
+                form.reset();
+                form['expense-matter-id'].value = matterId;
+                form['expense-id'].value = '';
+
+                if (expenseId) {
+                    const { expense } = this.findExpenseById(expenseId);
+                    if (expense) {
+                        form['expense-id'].value = expense.id;
+                        form['expense-date'].value = expense.date;
+                        form['expense-description'].value = expense.description;
+                        form['expense-amount'].value = expense.amount;
+                        document.getElementById('expense-modal-title').textContent = 'Edit Expense';
+                    }
+                } else {
+                    document.getElementById('expense-modal-title').textContent = 'Add Expense';
+                    form['expense-date'].value = new Date().toISOString().split('T')[0];
+                }
+                this.openModal('expense-modal');
+            },
+            
+            openTimeEntryModal(matterId, timeEntryId) {
+                const form = document.getElementById('time-entry-form');
+                form.reset();
+                form['time-entry-matter-id'].value = matterId;
+                form['time-entry-id'].value = timeEntryId;
+                
+                const { timeEntry } = this.findTimeEntryById(timeEntryId);
+                if (!timeEntry) {
+                     this.showToast('Error: Could not find time entry.', 'error');
+                     return;
+                }
+                
+                document.getElementById('time-entry-modal-title').textContent = 'Edit Time Entry';
+                form['time-entry-date'].value = timeEntry.date;
+                form['time-entry-rate'].value = timeEntry.rate || 250;
+                form['time-entry-description'].value = timeEntry.description;
+                
+                const duration = timeEntry.duration || 0;
+                const hours = Math.floor(duration / 3600000);
+                const minutes = Math.floor((duration % 3600000) / 60000);
+                const seconds = Math.floor((duration % 60000) / 1000);
+                
+                form['time-entry-hours'].value = hours;
+                form['time-entry-minutes'].value = minutes;
+                form['time-entry-seconds'].value = seconds;
+
+                this.updateTimeEntryCalculation();
+                this.openModal('time-entry-modal');
+            },
+
+            updateTimeEntryCalculation() {
+                const form = document.getElementById('time-entry-form');
+                const hours = parseInt(form['time-entry-hours'].value || 0);
+                const minutes = parseInt(form['time-entry-minutes'].value || 0);
+                const seconds = parseInt(form['time-entry-seconds'].value || 0);
+                const durationMs = (hours * 3600 + minutes * 60 + seconds) * 1000;
+                
+                const rate = parseFloat(form['time-entry-rate'].value || 0);
+                const amount = (durationMs / 3600000) * rate;
+
+                document.getElementById('time-entry-calculated-amount').textContent = this.formatCurrency(amount);
+            },
+            
+            openFirmInfoModal() {
+                document.getElementById('firm-name').value = this.data.firmInfo.name;
+                document.getElementById('firm-address').value = this.data.firmInfo.address;
+                const preview = document.getElementById('logo-preview');
+                const removeBtn = document.getElementById('remove-logo-btn');
+                if (this.data.firmInfo.logoDataUrl) {
+                    preview.src = this.data.firmInfo.logoDataUrl;
+                    removeBtn.classList.remove('hidden');
+                } else {
+                    preview.src = 'https://placehold.co/100x100/e2e8f0/4a5568?text=Logo';
+                    removeBtn.classList.add('hidden');
+                }
+                this.openModal('firm-info-modal');
+            },
+
+            setupLogoUploadListeners() {
+                const dropZone = document.getElementById('logo-drop-zone');
+                const fileInput = document.getElementById('firm-logo-upload');
+                const preview = document.getElementById('logo-preview');
+                const removeBtn = document.getElementById('remove-logo-btn');
+
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'));
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'));
+                });
+
+                dropZone.addEventListener('drop', e => {
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        this.handleLogoFile(files[0]);
+                    }
+                });
+
+                fileInput.addEventListener('change', e => {
+                    if (e.target.files.length > 0) {
+                        this.handleLogoFile(e.target.files[0]);
+                    }
+                });
+                
+                removeBtn.addEventListener('click', () => {
+                    this.data.firmInfo.logoDataUrl = null;
+                    preview.src = 'https://placehold.co/100x100/e2e8f0/4a5568?text=Logo';
+                    removeBtn.classList.add('hidden');
+                });
+            },
+
+            handleLogoFile(file) {
+                if (!file.type.startsWith('image/')) {
+                    this.showToast('Invalid file type. Please upload an image.', 'error');
+                    return;
+                }
+                if (file.size > 3 * 1024 * 1024) { // 3MB limit
+                    this.showToast('File is too large. Maximum size is 3MB.', 'error');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => {
+                    this.data.firmInfo.logoDataUrl = reader.result;
+                    document.getElementById('logo-preview').src = reader.result;
+                    document.getElementById('remove-logo-btn').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            },
+            
+            toggleTimer(matterId) {
+                const { matter } = this.findMatterById(matterId, true);
+                if (matter) {
+                    if (matter.timerRunning) {
+                        // Stop timer
+                        const elapsed = Date.now() - matter.timerStartTime;
+                        matter.timerRunning = false;
+                        
+                        const totalDuration = (matter.lastTimerDuration || 0) + elapsed;
+                        const hours = Math.floor(totalDuration / 3600000);
+                        const minutes = Math.floor((totalDuration % 3600000) / 60000);
+                        const seconds = Math.floor((totalDuration % 60000) / 1000);
+                        
+                        this.openModal('time-entry-modal');
+                        const form = document.getElementById('time-entry-form');
+                        form.reset();
+                        form['time-entry-matter-id'].value = matterId;
+                        form['time-entry-date'].value = new Date().toISOString().split('T')[0];
+                        form['time-entry-hours'].value = hours;
+                        form['time-entry-minutes'].value = minutes;
+                        form['time-entry-seconds'].value = seconds;
+                        form['time-entry-rate'].value = 250; // default rate
+                        this.updateTimeEntryCalculation();
+                        
+                        matter.lastTimerDuration = null; // Clear duration after saving
+                    } else {
+                        // Start timer
+                        matter.timerRunning = true;
+                        matter.timerStartTime = Date.now();
+                        matter.lastTimerDuration = 0; // Reset duration
+                    }
+                    this.saveData();
+                    this.renderClients();
+                }
+            },
+            
+            updateRunningTimers() {
+                this.data.clients.forEach(client => {
+                    (client.matters || []).forEach(matter => {
+                        if (matter.timerRunning) {
+                            const runningTimeEl = document.getElementById(`running-time-${matter.id}`);
+                            const totalTimeEl = document.getElementById(`total-time-${matter.id}`);
+                            
+                            if (runningTimeEl && totalTimeEl) {
+                                const runningTime = Date.now() - matter.timerStartTime;
+                                const totalTime = this.calculateTotalMatterTime(matter) + runningTime;
+                                
+                                runningTimeEl.textContent = this.formatDuration(runningTime);
+                                totalTimeEl.textContent = this.formatDuration(totalTime);
+                            }
+                        }
+                    });
+                });
+            },
+            
+            resetInvoiceForm() {
+                document.getElementById('invoice-form').reset();
+                document.getElementById('invoice-id').value = '';
+                document.getElementById('invoice-modal-title').textContent = 'Create Invoice';
+                document.getElementById('invoice-line-items').innerHTML = '';
+                document.getElementById('invoice-total').textContent = '$0.00';
+                document.getElementById('invoice-date').value = new Date().toISOString().split('T')[0];
+                delete document.getElementById('invoice-form').dataset.billedEntryIds;
+                delete document.getElementById('invoice-form').dataset.billedExpenseIds;
+            },
+            
+            openInvoiceModalForEdit(invoiceId) {
+                this.resetInvoiceForm();
+                const invoice = this.data.invoices.find(i => i.id === invoiceId);
+                if (!invoice) return;
+
+                document.getElementById('invoice-id').value = invoice.id;
+                document.getElementById('invoice-client').value = invoice.matterId;
+                document.getElementById('invoice-date').value = invoice.date;
+                document.getElementById('invoice-notes').value = invoice.notes;
+                document.getElementById('invoice-modal-title').textContent = 'Edit Invoice';
+                
+                const lineItemsContainer = document.getElementById('invoice-line-items');
+                (invoice.lineItems || []).forEach(item => {
+                    this.addInvoiceLineItem(item.description, item.quantity, item.rate);
+                });
+                this.updateInvoiceTotal();
+                this.openModal('invoice-modal');
+            },
+            
+            addInvoiceLineItem(desc = '', qty = 1, rate = 0) {
+                const container = document.getElementById('invoice-line-items');
+                const div = document.createElement('div');
+                div.className = 'line-item-row flex items-center gap-2';
+                div.innerHTML = `
+                    <input type="text" class="line-item-desc shadow-sm border rounded w-1/2 py-1 px-2 text-sm" value="${desc}" placeholder="Description">
+                    <input type="number" class="line-item-qty shadow-sm border rounded w-24 py-1 px-2 text-sm" value="${qty}" step="0.01" min="0" placeholder="Qty">
+                    <input type="number" class="line-item-rate shadow-sm border rounded w-24 py-1 px-2 text-sm" value="${rate}" step="0.01" min="0" placeholder="Rate">
+                    <span class="line-item-total font-mono text-sm w-24 text-right">$0.00</span>
+                    <button type="button" class="remove-line-item-btn text-red-500 hover:text-red-700 text-sm">✖</button>
+                `;
+                container.appendChild(div);
+                this.updateInvoiceTotal();
+            },
+            
+            updateInvoiceTotal() {
+                let total = 0;
+                document.querySelectorAll('#invoice-line-items .line-item-row').forEach(row => {
+                    const qty = parseFloat(row.querySelector('.line-item-qty').value) || 0;
+                    const rate = parseFloat(row.querySelector('.line-item-rate').value) || 0;
+                    const subtotal = qty * rate;
+                    row.querySelector('.line-item-total').textContent = this.formatCurrency(subtotal);
+                    total += subtotal;
+                });
+                document.getElementById('invoice-total').textContent = this.formatCurrency(total);
+            },
+            
+            renderInvoiceForView(invoiceId) {
+                const invoice = this.data.invoices.find(i => i.id === invoiceId);
+                if (!invoice) return;
+                
+                const client = this.findClientByMatterId(invoice.matterId);
+                const matter = this.findMatterById(invoice.matterId);
+                
+                const firmLogo = this.data.firmInfo.logoDataUrl 
+                    ? `<img src="${this.data.firmInfo.logoDataUrl}" alt="Firm Logo" style="max-height: 80px; max-width: 200px;">`
+                    : '';
+
+                let lineItemsHtml = (invoice.lineItems || []).map(item => `
+                    <tr class="border-b">
+                        <td class="p-2">${item.description}</td>
+                        <td class="p-2 text-right">${item.quantity.toFixed(2)}</td>
+                        <td class="p-2 text-right">${this.formatCurrency(item.rate)}</td>
+                        <td class="p-2 text-right">${this.formatCurrency(item.quantity * item.rate)}</td>
+                    </tr>
+                `).join('');
+                
+                const container = document.getElementById('invoice-content');
+                container.innerHTML = `
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                ${firmLogo}
+                                <p class="font-bold mt-2">${this.data.firmInfo.name}</p>
+                                <p class="text-sm whitespace-pre-line">${this.data.firmInfo.address}</p>
+                            </div>
+                            <div class="text-right">
+                                <h1 class="text-3xl font-bold">INVOICE</h1>
+                                <p class="text-sm">Invoice #: <span class="font-mono">${invoice.id}</span></p>
+                                <p class="text-sm">Date: ${invoice.date}</p>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <h4 class="text-gray-500 text-sm font-bold uppercase">Bill To:</h4>
+                            <p class="font-bold">${client.name}</p>
+                            <p class="text-sm">${client.email || ''}</p>
+                            <p class="text-sm">${client.phone || ''}</p>
+                            <p class="text-sm whitespace-pre-line">${client.address || ''}</p>
+                        </div>
+                        
+                        <p class="mb-2 text-sm"><strong>Re:</strong> ${matter.name}</p>
+
+                        <table class="w-full text-left mb-6">
+                            <thead>
+                                <tr class="bg-gray-100 border-b">
+                                    <th class="p-2">Description</th>
+                                    <th class="p-2 text-right">Quantity</th>
+                                    <th class="p-2 text-right">Rate</th>
+                                    <th class="p-2 text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${lineItemsHtml}
+                            </tbody>
+                        </table>
+                        
+                        <div class="flex justify-end mb-6">
+                            <div class="w-1/3">
+                                <div class="flex justify-between">
+                                    <strong class_:"text-lg">Total Due:</strong>
+                                    <strong class="text-lg">${this.formatCurrency(invoice.total)}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-bold mb-2">Notes</h5>
+                            <p class="text-sm whitespace-pre-line">${invoice.notes || 'Thank you for your business.'}</p>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            openConfirmationModal(title, message, onConfirm) {
+                document.getElementById('confirmation-title').textContent = title;
+                document.getElementById('confirmation-message').textContent = message;
+                document.getElementById('confirm-delete-btn').onclick = () => {
+                    onConfirm();
+                    this.closeModal('confirmation-modal');
+                };
+                this.openModal('confirmation-modal');
+            },
+            
+            handleConfirmDelete() {
+                // This is handled by the `onclick` set in `openConfirmationModal`
+            },
+
+            deleteClient(clientId) {
+                this.data.clients = this.data.clients.filter(c => c.id !== clientId);
+                // Also need to delete associated trust transactions, invoices, etc.
+                const matterIds = (this.data.clients.find(c => c.id === clientId)?.matters || []).map(m => m.id);
+                this.data.trustTransactions = this.data.trustTransactions.filter(t => !matterIds.includes(t.matterId));
+                this.data.invoices = this.data.invoices.filter(i => !matterIds.includes(i.matterId));
+                this.saveData();
+                this.render();
+            },
+            
+            deleteMatter(matterId) {
+                this.data.clients.forEach(client => {
+                    client.matters = (client.matters || []).filter(m => m.id !== matterId);
+                });
+                // Also delete associated trust, invoices
+                this.data.trustTransactions = this.data.trustTransactions.filter(t => t.matterId !== matterId);
+                this.data.invoices = this.data.invoices.filter(i => i.matterId !== matterId);
+                this.saveData();
+                this.render();
+            },
+            
+            deleteTask(matterId, taskId) {
+                const { matter } = this.findMatterById(matterId, true);
+                if (matter) {
+                    matter.tasks = (matter.tasks || []).filter(t => t.id !== taskId);
+                    this.saveData();
+                    this.render();
+                }
+            },
+            
+            deleteExpense(matterId, expenseId) {
+                const { matter } = this.findMatterById(matterId, true);
+                if (matter) {
+                    matter.expenses = (matter.expenses || []).filter(ex => ex.id !== expenseId);
+                    this.saveData();
+                    this.render();
+                }
+            },
+
+            deleteTimeEntry(matterId, timeEntryId) {
+                const { matter } = this.findMatterById(matterId, true);
+                if (matter) {
+                    matter.timeEntries = (matter.timeEntries || []).filter(te => te.id !== timeEntryId);
+                    this.saveData();
+                    this.render();
+                }
+            },
+            
+            deleteInvoice(invoiceId) {
+                this.data.invoices = this.data.invoices.filter(i => i.id !== invoiceId);
+                this.saveData();
+                this.render();
+            },
+
+            handleExportData() {
+                let markdown = `# Law Firm Suite Data Export\n\n${new Date().toLocaleString()}\n\n`;
+                
+                markdown += `## Firm Info\n- **Name:** ${this.data.firmInfo.name}\n- **Address:** ${this.data.firmInfo.address.replace(/\n/g, ' ')}\n\n`;
+
+                markdown += `## Clients & Matters\n\n`;
+                this.data.clients.forEach(client => {
+                    markdown += `### Client: ${client.name}\n`;
+                    markdown += `- **Email:** ${client.email}\n- **Phone:** ${client.phone}\n- **Address:** ${client.address.replace(/\n/g, ' ')}\n- **Budget:** ${this.formatCurrency(client.budget)}\n\n`;
+                    
+                    (client.matters || []).forEach(matter => {
+                        markdown += `#### Matter: ${matter.name}\n- **Description:** ${matter.description}\n`;
+                        
+                        markdown += `##### Time Entries\n`;
+                        if (matter.timeEntries && matter.timeEntries.length > 0) {
+                            matter.timeEntries.forEach(entry => {
+                                markdown += `- **${entry.date}:** ${entry.description} (${this.formatDuration(entry.duration)} @ ${this.formatCurrency(entry.rate)} = ${this.formatCurrency(entry.amount)}) ${entry.isBilled ? '(Billed)' : ''}\n`;
+                            });
+                        } else {
+                            markdown += `- No time entries.\n`;
+                        }
+
+                        markdown += `\n##### Expenses\n`;
+                         if (matter.expenses && matter.expenses.length > 0) {
+                            matter.expenses.forEach(exp => {
+                                markdown += `- **${exp.date}:** ${exp.description} (${this.formatCurrency(exp.amount)}) ${exp.isBilled ? '(Billed)' : ''}\n`;
+                            });
+                        } else {
+                            markdown += `- No expenses.\n`;
+                        }
+                        
+                        markdown += `\n##### Tasks\n`;
+                        if (matter.tasks && matter.tasks.length > 0) {
+                            matter.tasks.forEach(task => {
+                                markdown += `- **[${task.status === 'outstanding' ? ' ' : 'x'}]** ${task.name} (Due: ${task.dueDate || 'N/A'})\n`;
+                            });
+                        } else {
+                            markdown += `- No tasks.\n`;
+                        }
+                        markdown += `\n`;
+                    });
+                });
+
+                markdown += `## Trust Account\n\n| Date | Client/Matter | Description | Type | Amount |\n|---|---|---|---|---:|\n`;
+                this.data.trustTransactions.forEach(t => {
+                    const matter = this.findMatterById(t.matterId);
+                    markdown += `| ${t.date} | ${matter.name} | ${t.description} | ${t.type} | ${this.formatCurrency(t.amount)} |\n`;
+                });
+
+                markdown += `\n## Operating Account\n\n| Date | Category | Description | Type | Amount |\n|---|---|---|---|---:|\n`;
+                this.data.operatingTransactions.forEach(t => {
+                    markdown += `| ${t.date} | ${t.category} | ${t.description} | ${t.type} | ${this.formatCurrency(t.amount)} |\n`;
+                });
+                
+                markdown += `\n## Invoices\n\n`;
+                this.data.invoices.forEach(inv => {
+                    const matter = this.findMatterById(inv.matterId);
+                    markdown += `### Invoice ${inv.id} (${inv.status})\n`;
+                    markdown += `- **Date:** ${inv.date}\n- **Matter:** ${matter.name}\n- **Total:** ${this.formatCurrency(inv.total)}\n\n`;
+                });
+
+                document.getElementById('export-data-textarea').value = markdown;
+                this.openModal('export-modal');
+            },
+            
+            handleCopyExportData() {
+                const textarea = document.getElementById('export-data-textarea');
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    this.showToast('Data copied to clipboard!', 'success');
+                } catch (err) {
+                    this.showToast('Error copying data.', 'error');
+                }
+            },
+            
+            // Utility Functions
+            findClientByMatterId(matterId) {
+                return this.data.clients.find(c => (c.matters || []).some(m => m.id === matterId));
+            },
+
+            findMatterById(matterId, returnFullObjects = false) {
+                for (const client of this.data.clients) {
+                    const matter = (client.matters || []).find(m => m.id === matterId);
+                    if (matter) {
+                        return returnFullObjects ? { client, matter } : matter;
+                    }
+                }
+                return returnFullObjects ? { client: null, matter: null } : null;
+            },
+            
+            findTaskById(taskId) {
+                for (const client of this.data.clients) {
+                    for (const matter of (client.matters || [])) {
+                        const task = (matter.tasks || []).find(t => t.id === taskId);
+                        if (task) {
+                            return { client, matter, task };
+                        }
+                    }
+                }
+                return { client: null, matter: null, task: null };
+            },
+            
+            findExpenseById(expenseId) {
+                for (const client of this.data.clients) {
+                    for (const matter of (client.matters || [])) {
+                        const expense = (matter.expenses || []).find(ex => ex.id === expenseId);
+                        if (expense) {
+                            return { client, matter, expense };
+                        }
+                    }
+                }
+                return { client: null, matter: null, expense: null };
+            },
+            
+            findTimeEntryById(timeEntryId) {
+                 for (const client of this.data.clients) {
+                    for (const matter of (client.matters || [])) {
+                        const timeEntry = (matter.timeEntries || []).find(te => te.id === timeEntryId);
+                        if (timeEntry) {
+                            return { client, matter, timeEntry };
+                        }
+                    }
+                }
+                return { client: null, matter: null, timeEntry: null };
+            },
+
+            calculateTotalMatterTime(matter) {
+                return (matter.timeEntries || []).reduce((acc, entry) => acc + (entry.duration || 0), 0);
+            },
+            
+            showToast(message, type = 'success') {
+                const toast = document.getElementById('toast-notification');
+                const messageEl = document.getElementById('toast-message');
+                
+                messageEl.textContent = message;
+                toast.className = 'fixed top-5 right-5 p-4 rounded-lg shadow-lg text-white z-50 transition-transform transform translate-x-0';
+                toast.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
+                
+                setTimeout(() => {
+                    toast.classList.replace('translate-x-0', 'translate-x-full');
+                }, 3000);
+            },
+            
+            formatCurrency(amount) {
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+            },
+
+            getClientLedgerBalance(matterId) {
+                return this.data.trustTransactions
+                    .filter(t => t.matterId === matterId)
+                    .reduce((acc, t) => acc + (t.type === 'deposit' ? t.amount : -t.amount), 0);
+            },
+
+            msToHms(ms) {
+                if (!ms) return '00:00:00';
+                let seconds = Math.floor(ms / 1000);
+                let minutes = Math.floor(seconds / 60);
+                let hours = Math.floor(minutes / 60);
+                seconds = seconds % 60;
+                minutes = minutes % 60;
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            },
+
+            formatDuration(ms) {
+                return this.msToHms(ms);
+            }
+        };
+
+        app.init();
+    });
+    </script>
+</body>
+</html>
